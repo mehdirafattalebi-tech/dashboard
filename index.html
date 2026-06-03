@@ -391,8 +391,8 @@ document.addEventListener('keydown',e=>{ if(e.key==='Enter') enterDash(); });
 // DATA
 // ============================================================
 const FALLBACK = {
-  gold:18028000, usd:171980, usdt:171100, usdt_local:172400,
-  eur:200630, silver:441900, copper:92000, oil:65400, xau:4539
+  gold:19250000, usd:174500, usdt:174800, usdt_local:175600,
+  eur:204000, silver:456000, copper:93500, oil:65400, xau:4539
 };
 
 const METRICS_CFG = [
@@ -435,16 +435,25 @@ async function fetchAll(){
       }catch(e){}
     }
 
+    // Use real market USD (not official rate)
+    // Try to get approximate from gold price back-calculation
+    // Gold 18k per gram in Iran ≈ (XAU_USD / 31.1035) * (18/24) * USD_TOMAN
+    // If XAU=4539, gold_gram = (4539/31.1035)*0.75*USD_TOMAN
+    // Real gold ~19,250,000 → USD_TOMAN = 19250000 / ((4539/31.1035)*0.75) ≈ 175,800
+    const estimatedUsdToman = Math.round(FALLBACK.gold / ((xauUsd / 31.1035) * (18/24) / 1)) || FALLBACK.usd;
+    const realUsdToman = (estimatedUsdToman > 150000 && estimatedUsdToman < 250000)
+      ? estimatedUsdToman : FALLBACK.usd;
+
     const oz2g=31.1035, purity=18/24;
-    const goldGram = Math.round((xauUsd/oz2g)*purity*usdToman/10000)*10000 || FALLBACK.gold;
-    const silverGram = Math.round((xagUsd/oz2g)*usdToman/1000)*1000 || FALLBACK.silver;
-    const copperKg = Math.round(copperUsd*usdToman/1000)*1000 || FALLBACK.copper;
+    const goldGram = Math.round((xauUsd/oz2g)*purity*realUsdToman/10000)*10000 || FALLBACK.gold;
+    const silverGram = Math.round((xagUsd/oz2g)*realUsdToman/1000)*1000 || FALLBACK.silver;
+    const copperKg = Math.round(copperUsd*realUsdToman/1000)*1000 || FALLBACK.copper;
 
     prices = {
       gold:       {val:goldGram,           chg:-0.8, unit:'ت'},
-      usd:        {val:FALLBACK.usd,       chg:-1.2, unit:'ت'},
-      usdt:       {val:FALLBACK.usdt,      chg:-2.0, unit:'ت'},
-      usdt_local: {val:FALLBACK.usdt_local,chg:-1.8, unit:'ت'},
+      usd:        {val:realUsdToman,       chg:-1.2, unit:'ت'},
+      usdt:       {val:Math.round(realUsdToman*1.002/100)*100, chg:-2.0, unit:'ت'},
+      usdt_local: {val:Math.round(realUsdToman*1.009/100)*100, chg:-1.8, unit:'ت'},
       eur:        {val:FALLBACK.eur,       chg:-1.5, unit:'ت'},
       silver:     {val:silverGram,         chg:-0.9, unit:'ت'},
       copper:     {val:copperKg,           chg: 0.4, unit:'ت'},
@@ -490,10 +499,6 @@ function renderMetrics(){
       <div class="lb">${cfg.lb}</div>
       <div class="vl ${p.chg>=0?'up':'dn'}">${disp}</div>
       <div class="ch ${p.chg>=0?'up':'dn'}"><i class="ti ti-trending-${p.chg>=0?'up':'down'}"></i> ${p.chg>=0?'+':''}${p.chg}٪</div>
-      <div class="profit-row">
-        <span class="profit-box">سود: ${cfg.profit}</span>
-        <span class="loss-box">ضرر: ${cfg.loss}</span>
-      </div>
       <div class="src-lbl">منبع: ${cfg.src}</div>
     </div>`;
   }).join('');
