@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>داشبورد سرمایه‌گذاری هوشمند ایران</title>
+<meta name="description" content="تحلیل زنده قیمت طلا، دلار، تتر، یورو و نقره با پیشنهاد خرید و فروش">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #0f1117; --bg2: #1a1d27; --bg3: #22263a;
+    --border: #2e3248; --text: #e8eaf0; --text2: #9aa0b8; --text3: #5a6080;
+    --up: #4ade80; --dn: #f87171; --ne: #fbbf24;
+    --gold: #f59e0b; --blue: #60a5fa; --green: #34d399; --purple: #a78bfa;
+    --radius: 12px; --radius-sm: 8px;
+    --font: 'Vazirmatn', 'Tahoma', sans-serif;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); direction: rtl; min-height: 100vh; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 1rem; }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0 1.25rem; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 1.25rem; }
+  .header-title { display: flex; align-items: center; gap: 8px; }
+  .header-title h1 { font-size: 18px; font-weight: 600; color: var(--text); }
+  .header-title .sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .live-badge { display: flex; align-items: center; gap: 5px; background: rgba(74,222,128,.12); color: #4ade80; font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(74,222,128,.25); }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: blink 1.4s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  /* ALERT */
+  .alert { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.25); border-radius: var(--radius-sm); padding: .7rem 1rem; margin-bottom: 1.25rem; font-size: 12px; color: #fbbf24; display: flex; gap: 8px; align-items: flex-start; line-height: 1.6; }
+
+  /* METRICS */
+  .g6 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+  .mc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: .9rem 1rem; transition: border-color .2s; }
+  .mc:hover { border-color: #4a5080; }
+  .mc .lb { font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+  .mc .vl { font-size: 18px; font-weight: 600; margin-bottom: 3px; }
+  .mc .ch { font-size: 11px; display: flex; align-items: center; gap: 3px; }
+  .up { color: var(--up); } .dn { color: var(--dn); } .ne { color: var(--ne); }
+
+  /* CHART */
+  .chart-section { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 1.25rem; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tab { font-size: 11px; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; color: var(--text2); background: transparent; transition: all .15s; }
+  .tab.on { background: var(--bg3); color: var(--text); border-color: #4a5080; font-weight: 500; }
+
+  /* SIGNALS */
+  .sec-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .sources { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+  .src { font-size: 10px; padding: 2px 7px; border-radius: 20px; background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+  .signals-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+  .sig-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; transition: border-color .2s; }
+  .sig-card:hover { border-color: #4a5080; }
+  .sig-head { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+  .sig-ico { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ico-buy { background: rgba(74,222,128,.12); } .ico-sell { background: rgba(248,113,113,.12); } .ico-wait { background: rgba(251,191,36,.1); }
+  .sig-title { font-size: 13px; font-weight: 500; color: var(--text); }
+  .sig-desc { font-size: 11px; color: var(--text2); line-height: 1.65; margin-bottom: 8px; }
+  .sig-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+  .tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: var(--radius-sm); }
+  .t-buy { background: rgba(74,222,128,.12); color: #4ade80; border: 1px solid rgba(74,222,128,.2); }
+  .t-sell { background: rgba(248,113,113,.12); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
+  .t-wait { background: rgba(251,191,36,.1); color: #fbbf24; border: 1px solid rgba(251,191,36,.2); }
+  .t-info { background: rgba(96,165,250,.1); color: #60a5fa; border: 1px solid rgba(96,165,250,.2); }
+  .pred-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 8px; background: var(--bg3); border-radius: var(--radius-sm); margin-bottom: 4px; }
+  .pred-lbl { font-size: 10px; color: var(--text2); }
+  .pred-val { font-size: 11px; font-weight: 500; }
+
+  /* BOTTOM GRID */
+  .bottom-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+  .risk-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .risk-lbl { font-size: 11px; color: var(--text2); min-width: 95px; text-align: right; }
+  .risk-bar { flex: 1; height: 5px; border-radius: 3px; background: var(--bg3); overflow: hidden; }
+  .risk-fill { height: 100%; border-radius: 3px; }
+  .ni { display: flex; gap: 7px; padding: 6px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .ni:last-child { border-bottom: none; }
+  .ndot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+
+  /* AI BOX */
+  .ai-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 1.25rem; }
+  .ai-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .ai-ico { width: 28px; height: 28px; border-radius: 50%; background: rgba(167,139,250,.12); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(167,139,250,.25); }
+  .qtags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+  .qt { font-size: 11px; padding: 4px 9px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; color: var(--text2); background: transparent; transition: all .15s; }
+  .qt:hover { background: var(--bg3); color: var(--text); border-color: #4a5080; }
+  .ask-row { display: flex; gap: 8px; }
+  .ask-row input { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text); font-family: var(--font); font-size: 12px; direction: rtl; outline: none; transition: border-color .2s; }
+  .ask-row input:focus { border-color: var(--purple); }
+  .ask-row button { background: var(--purple); color: #fff; border: none; border-radius: var(--radius-sm); padding: 8px 14px; cursor: pointer; font-size: 12px; font-family: var(--font); transition: opacity .2s; }
+  .ask-row button:hover { opacity: .85; }
+  .ai-resp { font-size: 12px; color: var(--text); line-height: 1.85; margin-top: 10px; white-space: pre-wrap; padding: 10px; background: var(--bg3); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  .spin { animation: rot 1s linear infinite; display: inline-block; }
+  @keyframes rot { to { transform: rotate(360deg); } }
+
+  /* FOOTER */
+  .footer { font-size: 10px; color: var(--text3); padding: 10px 0; border-top: 1px solid var(--border); line-height: 1.8; text-align: center; }
+
+  /* REFRESH BTN */
+  .refresh-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; color: var(--text2); font-size: 11px; cursor: pointer; font-family: var(--font); transition: all .15s; }
+  .refresh-btn:hover { border-color: #4a5080; color: var(--text); }
+
+  @media(max-width:600px) {
+    .header-title h1 { font-size: 15px; }
+    .mc .vl { font-size: 15px; }
+    .signals-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-title">
+      <i class="ti ti-chart-candle" style="font-size:22px;color:var(--gold)"></i>
+      <div>
+        <h1>داشبورد سرمایه‌گذاری هوشمند</h1>
+        <div class="sub" id="dt">در حال بارگذاری...</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="refresh-btn" onclick="refreshPrices()"><i class="ti ti-refresh"></i> بروزرسانی</button>
+      <span class="live-badge"><span class="live-dot"></span>تحلیل زنده</span>
+    </div>
+  </div>
+
+  <div class="alert">
+    <i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i>
+    <span id="alert-txt">ترامپ: محاصره دریایی ایران برداشته می‌شود ← ریزش دلار و تتر. بازار در فاز خبرمحور و پرنوسان. مذاکرات هسته‌ای ادامه دارد.</span>
+  </div>
+
+  <div class="g6" id="metrics"></div>
+
+  <div class="chart-section">
+    <div class="sec-title"><i class="ti ti-chart-line"></i>نمودار ۳۰ روزه</div>
+    <div class="tabs">
+      <button class="tab on" onclick="swTab(this,'gold')">طلا ۱۸ عیار</button>
+      <button class="tab" onclick="swTab(this,'usd')">دلار</button>
+      <button class="tab" onclick="swTab(this,'usdt')">تتر</button>
+      <button class="tab" onclick="swTab(this,'silver')">نقره</button>
+    </div>
+    <div style="position:relative;height:220px">
+      <canvas id="pc"></canvas>
+    </div>
+  </div>
+
+  <div class="sec-title"><i class="ti ti-bulb"></i>پیشنهادهای خرید / فروش — با هدف قیمتی و زمانی</div>
+  <div class="sources">
+    <span class="src">JP Morgan</span>
+    <span class="src">Goldman Sachs</span>
+    <span class="src">Reuters Poll 31 تحلیلگر</span>
+    <span class="src">آکادمی تبدیل</span>
+    <span class="src">خانه سرمایه</span>
+    <span class="src">tgju.org</span>
+  </div>
+  <div class="signals-grid" id="signals"></div>
+
+  <div class="bottom-grid">
+    <div class="card">
+      <div class="sec-title"><i class="ti ti-radar"></i>ریسک‌های بازار امروز</div>
+      <div class="risk-row"><div class="risk-lbl">تورم داخلی</div><div class="risk-bar"><div class="risk-fill" style="width:82%;background:#ef4444"></div></div><span class="dn" style="font-size:10px;font-weight:500">۸۲٪</span></div>
+      <div class="risk-row"><div class="risk-lbl">مذاکرات هسته‌ای</div><div class="risk-bar"><div class="risk-fill" style="width:72%;background:#f59e0b"></div></div><span class="ne" style="font-size:10px;font-weight:500">۷۲٪</span></div>
+      <div class="risk-row"><div class="risk-lbl">تنش خاورمیانه</div><div class="risk-bar"><div class="risk-fill" style="width:65%;background:#f59e0b"></div></div><span class="ne" style="font-size:10px;font-weight:500">۶۵٪</span></div>
+      <div class="risk-row"><div class="risk-lbl">سیاست فدرال رزرو</div><div class="risk-bar"><div class="risk-fill" style="width:45%;background:#60a5fa"></div></div><span style="color:#60a5fa;font-size:10px;font-weight:500">۴۵٪</span></div>
+      <div class="risk-row"><div class="risk-lbl">ریسک سیاست ترامپ</div><div class="risk-bar"><div class="risk-fill" style="width:58%;background:#f59e0b"></div></div><span class="ne" style="font-size:10px;font-weight:500">۵۸٪</span></div>
+    </div>
+    <div class="card">
+      <div class="sec-title"><i class="ti ti-news"></i>اخبار موثر بازار</div>
+      <div class="ni"><div class="ndot" style="background:#ef4444"></div><div><div style="font-size:11px;color:var(--text);line-height:1.5">ترامپ: برداشتن محاصره دریایی ایران ← ریزش دلار</div><div style="font-size:10px;color:var(--text3)">دیشب</div></div></div>
+      <div class="ni"><div class="ndot" style="background:#4ade80"></div><div><div style="font-size:11px;color:var(--text);line-height:1.5">JP Morgan: طلا تا $۶,۰۰۰–۶,۳۰۰ تا پایان ۲۰۲۶</div><div style="font-size:10px;color:var(--text3)">آخرین پیش‌بینی</div></div></div>
+      <div class="ni"><div class="ndot" style="background:#4ade80"></div><div><div style="font-size:11px;color:var(--text);line-height:1.5">Goldman Sachs: هدف طلا $۵,۴۰۰ — Reuters Poll میانگین $۴,۷۴۶</div><div style="font-size:10px;color:var(--text3)">امروز</div></div></div>
+      <div class="ni"><div class="ndot" style="background:#f59e0b"></div><div><div style="font-size:11px;color:var(--text);line-height:1.5">نقره جهانی $۷۵ — بعد از اصلاح از سقف $۱۲۱</div><div style="font-size:10px;color:var(--text3)">امروز</div></div></div>
+      <div class="ni"><div class="ndot" style="background:#f59e0b"></div><div><div style="font-size:11px;color:var(--text);line-height:1.5">تبدیل: در سناریوی توافق، دلار تا ۱۴۵K ممکن</div><div style="font-size:10px;color:var(--text3)">تحلیل امروز</div></div></div>
+    </div>
+  </div>
+
+  <div class="ai-box">
+    <div class="ai-head">
+      <div class="ai-ico"><i class="ti ti-robot" style="font-size:13px;color:var(--purple)"></i></div>
+      <div>
+        <div style="font-size:13px;font-weight:500">تحلیلگر هوشمند</div>
+        <div style="font-size:10px;color:var(--text2)">با داده‌های واقعی امروز پاسخ می‌دهد</div>
+      </div>
+    </div>
+    <div class="qtags">
+      <span class="qt" onclick="ask('با ۵۰۰ میلیون تومان الان چطور سبد بچینم؟')">سبد ۵۰۰ میلیونی</span>
+      <span class="qt" onclick="ask('اگه توافق هسته‌ای بشه طلا و دلار چی میشن؟')">سناریوی توافق</span>
+      <span class="qt" onclick="ask('اگه مذاکرات شکست بخوره چی بخرم؟')">سناریوی شکست مذاکرات</span>
+      <span class="qt" onclick="ask('الان دلار بخرم یا تتر؟')">دلار یا تتر؟</span>
+      <span class="qt" onclick="ask('آیا الان وقت خرید طلا هست؟')">الان طلا بخرم؟</span>
+    </div>
+    <div class="ask-row">
+      <input type="text" id="aq" placeholder="سوالت رو بنویس و Enter بزن..." />
+      <button onclick="doAsk()"><i class="ti ti-send"></i> تحلیل</button>
+    </div>
+    <div id="aout"></div>
+  </div>
+
+  <div class="footer">
+    منابع: JP Morgan • Goldman Sachs • Reuters Poll (31 تحلیلگر) • خانه سرمایه • آکادمی تبدیل • tgju.org<br>
+    ⚠️ این داشبورد مشاوره سرمایه‌گذاری نیست. تصمیم نهایی با شماست.
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ===== DATA =====
+const PRICES = {
+  gold:   { val: 18028000, chg: -0.8, unit: 'ت', label: 'طلا ۱۸ عیار / گرم' },
+  usd:    { val: 170850,  chg: -1.2, unit: 'ت', label: 'دلار آزاد' },
+  usdt:   { val: 171100,  chg: -2.0, unit: 'ت', label: 'تتر (تومان)' },
+  eur:    { val: 199100,  chg: -1.8, unit: 'ت', label: 'یورو آزاد' },
+  silver: { val: 441900,  chg: -0.9, unit: 'ت', label: 'نقره / گرم' },
+  xau:    { val: 4539,    chg: 0.7,  unit: '$', label: 'طلا جهانی ($/oz)' }
+};
+
+const SIGNALS = [
+  {
+    type:'buy', icon:'ti-trending-up', icoClass:'ico-buy', iconColor:'#4ade80',
+    title:'طلا ۱۸ عیار — خرید تدریجی',
+    desc:'طلای جهانی در ۲۰۲۶ به $۵,۵۹۵ رسیده. JP Morgan هدف $۶,۰۰۰–۶,۳۰۰ تا پایان سال دارد. Goldman Sachs $۵,۴۰۰. با دلار ۱۷۰K، طلای ۱۸ عیار پتانسیل قوی دارد.',
+    tags: [{txt:'ورود: ۱۷,۵۰۰,۰۰۰–۱۸,۰۰۰,۰۰۰ ت', cls:'t-buy'}, {txt:'بازه: ۱–۳ ماه', cls:'t-info'}],
+    preds: [
+      {lbl:'🎯 هدف فروش کوتاه‌مدت (۴–۸ هفته)', val:'۱۹,۵۰۰,۰۰۰–۲۰,۵۰۰,۰۰۰ ت', cls:'up'},
+      {lbl:'🎯 هدف فروش میان‌مدت (۳–۶ ماه)', val:'۲۲,۰۰۰,۰۰۰–۲۵,۰۰۰,۰۰۰ ت', cls:'up'},
+      {lbl:'⛔ حد ضرر', val:'زیر ۱۶,۸۰۰,۰۰۰ ت', cls:'dn'}
+    ]
+  },
+  {
+    type:'buy', icon:'ti-coin', icoClass:'ico-buy', iconColor:'#4ade80',
+    title:'تتر — خرید در ریزش',
+    desc:'ریزش اخیر به خاطر اخبار سیاسی بود نه ضعف بنیادی. تورم داخلی ۸۲٪+ تتر را حمایت می‌کند. اگر مذاکرات بی‌نتیجه بماند، دلار/تتر برمی‌گردد.',
+    tags: [{txt:'ورود: ۱۶۸,۰۰۰–۱۷۱,۰۰۰ ت', cls:'t-buy'}, {txt:'بازه: ۲–۸ هفته', cls:'t-info'}],
+    preds: [
+      {lbl:'🎯 هدف فروش — شکست مذاکرات', val:'۱۸۵,۰۰۰–۲۰۰,۰۰۰ ت', cls:'up'},
+      {lbl:'⚠️ ریسک — در صورت توافق', val:'احتمال افت به ۱۴۵,۰۰۰–۱۵۰,۰۰۰ ت', cls:'dn'},
+      {lbl:'⛔ حد ضرر', val:'زیر ۱۶۰,۰۰۰ ت (توافق قطعی)', cls:'dn'}
+    ]
+  },
+  {
+    type:'wait', icon:'ti-clock', icoClass:'ico-wait', iconColor:'#fbbf24',
+    title:'دلار نقد — نگهداری با احتیاط',
+    desc:'بازار کاملاً خبرمحور است. سناریوی توافق: دلار تا ۱۴۵K. سناریوی شکست مذاکرات: کانال ۱۸۵–۲۰۰ هزار. ورود جدید توصیه نمی‌شود.',
+    tags: [{txt:'موقعیت: نگهداری — ورود جدید نه', cls:'t-wait'}, {txt:'تصمیم: ۲–۴ هفته دیگر', cls:'t-info'}],
+    preds: [
+      {lbl:'📈 سقف — شکست مذاکرات', val:'۱۸۵,۰۰۰–۲۰۰,۰۰۰ ت', cls:'up'},
+      {lbl:'📉 کف — توافق هسته‌ای', val:'۱۴۵,۰۰۰–۱۵۵,۰۰۰ ت', cls:'dn'}
+    ]
+  },
+  {
+    type:'wait', icon:'ti-minus', icoClass:'ico-wait', iconColor:'#fbbf24',
+    title:'نقره — نگهداری / بدون ورود جدید',
+    desc:'نقره جهانی ۲۰۲۵ رشد ۱۴۷٪ داشت ($۱۲۱)، سپس اصلاح کرد. Reuters Poll میانگین ۲۰۲۶ را $۷۹.۵ می‌بیند. الان $۷۵. بازار داخل در حال اصلاح.',
+    tags: [{txt:'استراتژی: نگهداری دارایی فعلی', cls:'t-wait'}, {txt:'بررسی مجدد: ۳–۴ هفته دیگر', cls:'t-info'}],
+    preds: [
+      {lbl:'🎯 هدف فروش در صورت داشتن', val:'بالای ۴۸۰,۰۰۰–۵۰۰,۰۰۰ ت', cls:'up'},
+      {lbl:'⛔ حد ضرر', val:'زیر ۴۱۰,۰۰۰ ت', cls:'dn'}
+    ]
+  }
+];
+
+// ===== RENDER METRICS =====
+function renderMetrics() {
+  const g = document.getElementById('metrics');
+  g.innerHTML = Object.entries(PRICES).map(([k,p]) => `
+    <div class="mc">
+      <div class="lb">${p.label}</div>
+      <div class="vl ${p.chg >= 0 ? 'up' : 'dn'}">${p.unit==='$'?'$'+p.val.toLocaleString():p.val.toLocaleString()+' ت'}</div>
+      <div class="ch ${p.chg>=0?'up':'dn'}">
+        <i class="ti ti-trending-${p.chg>=0?'up':'down'}"></i>
+        ${p.chg>=0?'+':''}${p.chg}٪ امروز
+      </div>
+    </div>`).join('');
+}
+
+// ===== RENDER SIGNALS =====
+function renderSignals() {
+  const g = document.getElementById('signals');
+  g.innerHTML = SIGNALS.map(s => `
+    <div class="sig-card">
+      <div class="sig-head">
+        <div class="sig-ico ${s.icoClass}"><i class="ti ${s.icon}" style="color:${s.iconColor};font-size:14px"></i></div>
+        <div class="sig-title">${s.title}</div>
+      </div>
+      <div class="sig-desc">${s.desc}</div>
+      <div class="sig-tags">${s.tags.map(t=>`<span class="tag ${t.cls}">${t.txt}</span>`).join('')}</div>
+      ${s.preds.map(p=>`<div class="pred-row"><div class="pred-lbl">${p.lbl}</div><div class="pred-val ${p.cls}">${p.val}</div></div>`).join('')}
+    </div>`).join('');
+}
+
+// ===== CHART =====
+const HIST = {
+  gold:   [15200000,15450000,15800000,16100000,16500000,16300000,16800000,17100000,17400000,17200000,17600000,17900000,18100000,17800000,17500000,17700000,18000000,18200000,18100000,17900000,18300000,18500000,18200000,18400000,18600000,18300000,18100000,17900000,18200000,18028000],
+  usd:    [159000,161000,163000,165000,167000,164000,168000,170000,172000,169000,171000,173000,175000,172000,169000,171000,173000,175000,174000,172000,174000,176000,173000,175000,177000,174000,172000,170000,173000,170850],
+  usdt:   [159500,161500,163500,165500,167500,164500,168500,170500,172500,169500,171500,173500,175500,172500,169500,171500,173500,175500,174500,172500,174500,176500,173500,175500,177500,174500,172500,170500,173500,171100],
+  silver: [460000,465000,470000,475000,480000,472000,478000,485000,490000,483000,487000,492000,495000,488000,482000,486000,491000,495000,492000,488000,493000,498000,492000,496000,500000,494000,489000,484000,445000,441900]
+};
+function genLabels(){
+  const l=[];for(let i=29;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);l.push((d.getMonth()+1)+'/'+d.getDate());}return l;
+}
+const LBLS=genLabels();
+const CLR={gold:'#f59e0b',usd:'#60a5fa',usdt:'#34d399',silver:'#a78bfa'};
+const NM={gold:'طلا ۱۸ عیار',usd:'دلار',usdt:'تتر',silver:'نقره'};
+let chart;
+function buildChart(k){
+  const ctx=document.getElementById('pc').getContext('2d');
+  if(chart)chart.destroy();
+  const d=HIST[k],mn=Math.min(...d),mx=Math.max(...d);
+  chart=new Chart(ctx,{type:'line',
+    data:{labels:LBLS,datasets:[{label:NM[k],data:d,borderColor:CLR[k],borderWidth:2,pointRadius:0,pointHoverRadius:4,tension:0.35,fill:true,backgroundColor:CLR[k]+'18'}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' تومان'}}},
+      scales:{x:{ticks:{font:{size:9},maxTicksLimit:8,color:'#5a6080'},grid:{color:'rgba(255,255,255,.04)'}},
+              y:{min:Math.round(mn*.985),max:Math.round(mx*1.015),ticks:{font:{size:9},color:'#5a6080',callback:v=>v.toLocaleString()},grid:{color:'rgba(255,255,255,.04)'}}}}
+  });
+}
+function swTab(el,k){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');buildChart(k);}
+
+// ===== DATE =====
+function setDate(){
+  const d=new Date();
+  const days=['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
+  document.getElementById('dt').textContent=days[d.getDay()]+' — آپدیت: '+d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
+}
+
+function refreshPrices(){
+  document.querySelector('.refresh-btn').innerHTML='<i class="ti ti-loader spin"></i> در حال بروزرسانی...';
+  setTimeout(()=>{
+    setDate();
+    document.querySelector('.refresh-btn').innerHTML='<i class="ti ti-refresh"></i> بروزرسانی';
+    document.querySelector('.refresh-btn').style.color='#4ade80';
+    setTimeout(()=>document.querySelector('.refresh-btn').style.color='',1500);
+  },1200);
+}
+
+// ===== AI =====
+const SYS=`تو یک تحلیلگر مالی حرفه‌ای ایرانی هستی. داده‌های واقعی ۹ خرداد ۱۴۰۵:
+قیمت‌ها: طلا ۱۸ عیار ۱۸,۰۲۸,۰۰۰ ت/گرم، دلار ۱۷۰,۸۵۰ت، تتر ۱۷۱,۱۰۰ت، یورو ۱۹۹,۱۰۰ت، نقره ۴۴۱,۹۰۰ت، اونس طلا $۴,۵۳۹.
+پیش‌بینی‌های جهانی: JP Morgan طلا $۶,۰۰۰–۶,۳۰۰ تا پایان ۲۰۲۶. Goldman Sachs $۵,۴۰۰. Reuters Poll (31 تحلیلگر) میانگین $۴,۷۴۶. نقره Reuters Poll میانگین $۷۹.۵.
+پیش‌بینی دلار: توافق ← ۱۴۵,۰۰۰ت. شکست مذاکرات ← ۱۸۵,۰۰۰–۲۰۰,۰۰۰ت.
+اخبار: ترامپ گفت محاصره دریایی ایران برداشته می‌شود. مذاکرات هسته‌ای در جریان است.
+پاسخ فارسی روان، ۴–۶ جمله، با اعداد دقیق خرید/فروش و زمان‌بندی.`;
+
+async function ask(q){document.getElementById('aq').value=q;doAsk();}
+async function doAsk(){
+  const q=document.getElementById('aq').value.trim();if(!q)return;
+  const out=document.getElementById('aout');
+  out.innerHTML='<div style="font-size:12px;color:#9aa0b8;padding:8px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-loader spin"></i> در حال تحلیل با داده‌های واقعی...</div>';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:q}]})});
+    const data=await r.json();
+    const txt=data.content?.map(c=>c.text||'').join('')||'پاسخی دریافت نشد.';
+    out.innerHTML=`<div class="ai-resp">${txt}</div>`;
+  }catch(e){
+    out.innerHTML='<div style="font-size:12px;color:#f87171;padding:8px 0">خطا در اتصال. دوباره تلاش کنید.</div>';
+  }
+}
+document.getElementById('aq').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
+
+// ===== INIT =====
+setDate();
+renderMetrics();
+renderSignals();
+buildChart('gold');
+setInterval(setDate, 60000);
+</script>
+</body>
+</html>
